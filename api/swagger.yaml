@@ -1,0 +1,284 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a simple API"
+  version: "1.0.0"
+  title: "Simple GpsSpyThai API"
+  contact:
+    email: "you@your-company.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/NickyBall/GpsSpyThai/1.0.0"
+tags:
+- name: "Auth"
+  description: "For Authenticate"
+- name: "User"
+  description: "For User"
+- name: "Device"
+  description: "For Device"
+schemes:
+- "https"
+paths:
+  /Authenticate:
+    post:
+      tags:
+      - "Auth"
+      summary: "Login to App"
+      description: "API for authen to app.\n"
+      operationId: "authenticate"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Authenticate"
+        required: true
+        schema:
+          $ref: "#/definitions/AuthenticateItem"
+      responses:
+        200:
+          description: "Access Token"
+          schema:
+            $ref: "#/definitions/AuthenticateResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "Auth"
+  /GetDevicesByUser:
+    get:
+      tags:
+      - "User"
+      summary: "Get Devices for specific user"
+      description: "Get Devices for specific user\n"
+      operationId: "getdevice"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "AccessToken"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "DeviceList"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GetDeviceResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "User"
+  /GetProfileByDevice:
+    get:
+      tags:
+      - "Device"
+      summary: "Get Profile for specific Device"
+      description: "Get Profile for specific Device\n"
+      operationId: "getprofile"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "deviceId"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Device Profile"
+          schema:
+            $ref: "#/definitions/GetProfileResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "Device"
+  /GetHistoryByDevice:
+    get:
+      tags:
+      - "Device"
+      summary: "Get History By Device"
+      description: "Get History By Device\n"
+      operationId: "gethistory"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "deviceId"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "startDate"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "endDate"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Device History"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GetHistoryResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "Device"
+  /ChangePassword:
+    post:
+      tags:
+      - "User"
+      summary: "Change Password"
+      description: "Change User Password\n"
+      operationId: "changepassword"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "changePassword"
+        required: true
+        schema:
+          $ref: "#/definitions/ChangePasswordItem"
+      responses:
+        200:
+          description: "Change Password"
+          schema:
+            $ref: "#/definitions/ChangePasswordResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "User"
+definitions:
+  AuthenticateItem:
+    properties:
+      Username:
+        type: "string"
+        example: "client"
+      Password:
+        type: "string"
+        example: "clientPassword"
+  AuthenticateResponse:
+    type: "object"
+    required:
+    - "AccessToken"
+    - "uid"
+    properties:
+      uid:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      AccessToken:
+        type: "string"
+        example: "dwjn93h938hg9qp3ubp9bbp9p9bn39b93un3"
+  GetDeviceResponse:
+    type: "object"
+    required:
+    - "deviceId"
+    - "licensePlate"
+    properties:
+      deviceId:
+        type: "string"
+        example: "x1d4-u2s3"
+      licensePlate:
+        type: "string"
+        example: "กข-1234 นนทบุรี"
+  GetProfileResponse:
+    type: "object"
+    required:
+    - "driver"
+    - "energyRemain"
+    - "energyType"
+    - "ioStatus"
+    - "licensePlate"
+    - "nearby"
+    - "speed"
+    - "status"
+    - "time"
+    properties:
+      licensePlate:
+        type: "string"
+        example: "กข-1234 นนทบุรี"
+      driver:
+        type: "string"
+        example: "สมชาย ใจดี"
+      status:
+        type: "string"
+        example: "Stop(14-Oct-2017)"
+      time:
+        type: "string"
+        example: "14-Oct-2017 11:57:25"
+      nearby:
+        type: "string"
+        example: "วัดป่าอดุลย์ ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น 40000"
+      speed:
+        type: "number"
+        example: 78.25
+      energyType:
+        type: "string"
+        example: "Oil"
+      energyRemain:
+        type: "number"
+        example: 58.77
+      ioStatus:
+        type: "string"
+        example: "off"
+  GetHistoryResponse:
+    type: "object"
+    required:
+    - "driver"
+    - "energyRemain"
+    - "energyType"
+    - "ioStatus"
+    - "licensePlate"
+    - "nearby"
+    - "speed"
+    - "status"
+    - "time"
+    properties:
+      licensePlate:
+        type: "string"
+        example: "กข-1234 นนทบุรี"
+      driver:
+        type: "string"
+        example: "สมชาย ใจดี"
+      status:
+        type: "string"
+        example: "Stop(14-Oct-2017)"
+      time:
+        type: "string"
+        example: "14-Oct-2017 11:57:25"
+      nearby:
+        type: "string"
+        example: "วัดป่าอดุลย์ ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น 40000"
+      speed:
+        type: "number"
+        example: 78.25
+      energyType:
+        type: "string"
+        example: "Oil"
+      energyRemain:
+        type: "number"
+        example: 58.77
+      ioStatus:
+        type: "string"
+        example: "off"
+  ChangePasswordItem:
+    properties:
+      AccessToken:
+        type: "string"
+        example: "dwjn93h938hg9qp3ubp9bbp9p9bn39b93un3"
+      OldPassword:
+        type: "string"
+        example: "clientPassword"
+      NewPassword:
+        type: "string"
+        example: "newPassword"
+  ChangePasswordResponse:
+    type: "object"
+    required:
+    - "message"
+    - "result"
+    properties:
+      result:
+        type: "string"
+        example: "success"
+      message:
+        type: "string"
+        example: "เปลี่ยนรหัสผ่านเสร็จสิ้น"
